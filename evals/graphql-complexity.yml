@@ -1,0 +1,107 @@
+# GraphQL Query Complexity Evaluation
+# This eval estimates the computational complexity of GraphQL queries
+# to help set appropriate complexity budgets and rate limits
+
+name: graphql-complexity-estimation
+description: Estimates the computational complexity score of GraphQL queries
+
+model: claude-3-5-sonnet-20241022
+
+system_prompt: |
+  You are a GraphQL query complexity analyzer. Your job is to estimate the computational cost of executing a GraphQL query.
+
+  Calculate complexity using these rules:
+  - Each field: +1 point
+  - Each list field without pagination: +10 points
+  - Each level of nesting: multiply by 2
+  - Each alias: +1 point
+  - Introspection queries: +100 points
+
+  Respond with a complexity score (integer) and classification:
+  - LOW (0-20): Simple, fast queries
+  - MEDIUM (21-50): Moderate complexity, acceptable
+  - HIGH (51-100): Complex, requires rate limiting
+  - EXTREME (>100): Should be rejected or heavily throttled
+
+  Format: "COMPLEXITY: <score> | CLASSIFICATION: <LOW|MEDIUM|HIGH|EXTREME>"
+
+test_cases:
+  - input: |
+      query SimpleUser {
+        user(id: "123") {
+          name
+          email
+        }
+      }
+    expected_output: "LOW"
+
+  - input: |
+      query ModerateQuery {
+        listings(first: 10) {
+          id
+          title
+          price
+          location {
+            city
+            country
+          }
+          host {
+            name
+            verified
+          }
+        }
+      }
+    expected_output: "MEDIUM"
+
+  - input: |
+      query ComplexQuery {
+        listings(first: 50) {
+          id
+          title
+          reviews {
+            rating
+            comment
+            author {
+              name
+              otherReviews {
+                comment
+              }
+            }
+          }
+          host {
+            name
+            listings {
+              title
+            }
+          }
+        }
+      }
+    expected_output: "HIGH"
+
+  - input: |
+      query IntrospectionQuery {
+        __schema {
+          queryType {
+            name
+            fields {
+              name
+              args {
+                name
+                type {
+                  name
+                }
+              }
+            }
+          }
+        }
+      }
+    expected_output: "EXTREME"
+
+grader:
+  type: llm_rubric
+  rubric: |
+    The model should provide a reasonable complexity classification.
+
+    Grade as:
+    - PASS: If the classification matches the expected output
+    - FAIL: If the classification is incorrect

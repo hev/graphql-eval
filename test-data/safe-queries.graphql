@@ -1,0 +1,82 @@
+# Safe GraphQL Queries for Airbnb
+# These queries follow security best practices
+
+# Simple user lookup with specific fields
+query GetUser {
+  user(id: "123") {
+    name
+    email
+    createdAt
+    profilePicture
+  }
+}
+
+# Paginated listings with reasonable depth
+query ListListings {
+  listings(first: 20, offset: 0) {
+    id
+    title
+    price
+    location {
+      city
+      country
+    }
+    host {
+      name
+      verified
+    }
+  }
+}
+
+# Reservation details with controlled nesting
+query GetReservation {
+  reservation(id: "456") {
+    checkIn
+    checkOut
+    status
+    guest {
+      name
+      email
+    }
+    listing {
+      title
+      location {
+        city
+      }
+      host {
+        name
+      }
+    }
+  }
+}
+
+# Search with filters and pagination
+query SearchListings {
+  searchListings(
+    location: "San Francisco"
+    checkIn: "2024-12-01"
+    checkOut: "2024-12-05"
+    guests: 2
+    first: 10
+  ) {
+    id
+    title
+    price
+    availability
+  }
+}
+
+# User's bookings with pagination
+query MyBookings {
+  me {
+    bookings(first: 10, status: CONFIRMED) {
+      id
+      checkIn
+      checkOut
+      listing {
+        title
+        thumbnail
+      }
+    }
+  }
+}

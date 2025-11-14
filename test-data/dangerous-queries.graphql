@@ -1,0 +1,157 @@
+# Dangerous GraphQL Queries - EXAMPLES OF WHAT TO BLOCK
+# These queries demonstrate security vulnerabilities and attack patterns
+
+# ATTACK: Schema Introspection (information disclosure)
+query DangerousIntrospection {
+  __schema {
+    types {
+      name
+      fields {
+        name
+        type {
+          name
+          kind
+        }
+      }
+    }
+  }
+}
+
+# ATTACK: Deep Nesting (exponential resource consumption)
+query DeepNestingAttack {
+  user(id: "1") {
+    reservations {
+      listing {
+        host {
+          listings {
+            reservations {
+              guest {
+                reservations {
+                  listing {
+                    reviews {
+                      author {
+                        reservations {
+                          listing {
+                            host {
+                              name
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+# ATTACK: Batch/Alias Attack (query batching DoS)
+query BatchAttack {
+  user1: user(id: "1") { name email }
+  user2: user(id: "2") { name email }
+  user3: user(id: "3") { name email }
+  user4: user(id: "4") { name email }
+  user5: user(id: "5") { name email }
+  user6: user(id: "6") { name email }
+  user7: user(id: "7") { name email }
+  user8: user(id: "8") { name email }
+  user9: user(id: "9") { name email }
+  user10: user(id: "10") { name email }
+  user11: user(id: "11") { name email }
+  user12: user(id: "12") { name email }
+  user13: user(id: "13") { name email }
+  user14: user(id: "14") { name email }
+  user15: user(id: "15") { name email }
+  user16: user(id: "16") { name email }
+  user17: user(id: "17") { name email }
+  user18: user(id: "18") { name email }
+  user19: user(id: "19") { name email }
+  user20: user(id: "20") { name email }
+}
+
+# ATTACK: Missing Pagination (resource exhaustion)
+query NoPaginationAttack {
+  allListings {
+    id
+    title
+    description
+    photos {
+      url
+      description
+    }
+    reviews {
+      comment
+      rating
+      author {
+        name
+        reviews {
+          comment
+        }
+      }
+    }
+  }
+}
+
+# ATTACK: Circular Query (infinite loop potential)
+query CircularRelationship {
+  listing(id: "1") {
+    host {
+      listings {
+        host {
+          listings {
+            host {
+              listings {
+                host {
+                  name
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+# ATTACK: Type Introspection (schema discovery)
+query TypeIntrospection {
+  __type(name: "User") {
+    name
+    fields {
+      name
+      type {
+        name
+        fields {
+          name
+        }
+      }
+    }
+  }
+}
+
+# ATTACK: Expensive Aggregation Without Limits
+query ExpensiveAggregation {
+  allUsers {
+    reservations {
+      listing {
+        reviews {
+          rating
+        }
+      }
+    }
+  }
+}
+
+# ATTACK: Combination Attack (multiple vectors)
+query CombinedAttack {
+  l1: listings { reviews { author { reservations { listing { reviews { comment }}}}}}
+  l2: listings { reviews { author { reservations { listing { reviews { comment }}}}}}
+  l3: listings { reviews { author { reservations { listing { reviews { comment }}}}}}
+  l4: listings { reviews { author { reservations { listing { reviews { comment }}}}}}
+  l5: listings { reviews { author { reservations { listing { reviews { comment }}}}}}
+}
