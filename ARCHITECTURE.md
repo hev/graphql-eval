@@ -268,16 +268,6 @@ const results = await runEval('evals/security.yml');
 
 ## Integration Points
 
-### CI/CD Integration
-
-```yaml
-# .github/workflows/security-tests.yml
-- run: npm install
-- run: npm test  # Vibecheck evals run as part of standard tests
-  env:
-    ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-```
-
 ### Development Workflow
 
 ```bash
@@ -345,9 +335,8 @@ Cost: ~$0.01-0.05 per run (with Claude Sonnet)
 
 Optimization strategies:
 - Cache results for unchanged evals
-- Run on PR/merge events, not every commit
 - Use faster models for development
-- Use production models for CI/CD
+- Use production models for critical checks
 
 ## Extension Points
 
@@ -451,7 +440,5 @@ This architecture demonstrates how Vibecheck's programmatic runner enables:
 - **Seamless Integration**: Works with existing npm/Jest workflows
 - **Developer Experience**: Familiar tooling and patterns
 - **Flexibility**: Easy to extend and customize
-- **Production Ready**: Suitable for CI/CD and monitoring
+- **Production Ready**: Suitable for automated testing and monitoring
 - **Maintainability**: Declarative evals, programmatic testing
-
-The key innovation is making AI evaluations feel like standard unit tests, removing the friction of adopting AI-based quality assurance.

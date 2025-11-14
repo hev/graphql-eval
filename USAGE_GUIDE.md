@@ -258,40 +258,6 @@ async function graphqlSecurityMiddleware(req, res, next) {
 app.post('/graphql', graphqlSecurityMiddleware, graphqlHandler);
 ```
 
-### CI/CD Integration
-
-```javascript
-// scripts/run-security-checks.js
-const { runEval } = require('@vibecheck/runner');
-
-async function main() {
-  const results = await runEval('./evals/graphql-security.yml');
-
-  console.log('Security Evaluation Results:');
-  console.log('Pass Rate:', results.summary.pass_rate + '%');
-
-  if (results.summary.pass_rate < 85) {
-    console.error('FAILED: Pass rate below threshold (85%)');
-    process.exit(1);
-  }
-
-  console.log('PASSED: All security checks met threshold');
-  process.exit(0);
-}
-
-main();
-```
-
-Then in your CI pipeline:
-
-```yaml
-# .github/workflows/security.yml
-- name: Run security checks
-  run: node scripts/run-security-checks.js
-  env:
-    ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-```
-
 ### Monitoring Integration
 
 ```javascript

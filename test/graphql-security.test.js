@@ -1,9 +1,8 @@
 /**
  * GraphQL Security Evaluation Tests
  *
- * This test suite demonstrates Vibecheck's NEW programmatic access feature
- * using the @vibecheck/runner npm package. Tests can be run as part of
- * standard CI/CD pipelines with `npm test`.
+ * Uses the @vibecheck/runner npm package to run evaluations
+ * programmatically with `npm test`.
  */
 
 const { runEval } = require('@vibecheck/runner');

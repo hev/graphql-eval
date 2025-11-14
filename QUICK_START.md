@@ -76,7 +76,6 @@ The tests:
 - **Review the evaluations**: Check `evals/graphql-security.yml` to see what patterns are detected
 - **Examine test queries**: Look at `test-data/dangerous-queries.graphql` for attack examples
 - **Add your own tests**: Follow the examples in `CONTRIBUTING.md`
-- **Integrate with CI/CD**: Use the GitHub Actions workflow in `.github/workflows/`
 
 ## Troubleshooting
 

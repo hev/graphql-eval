@@ -217,22 +217,6 @@ testTimeout: 120000  // 2 minutes
 - **HIGH** (51-100): Complex queries
 - **EXTREME** (>100): Should be rejected
 
-## CI/CD Integration
-
-### GitHub Actions
-```yaml
-- run: npm ci
-- run: npm test
-  env:
-    ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-```
-
-### Jenkins
-```groovy
-sh 'npm install'
-sh 'npm test'
-```
-
 ## Cost Estimates
 
 - Single test case: ~$0.001-0.005

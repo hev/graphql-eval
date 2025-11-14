@@ -56,19 +56,10 @@ This repository is now a complete, production-ready solution for GraphQL securit
   - Threshold alerting
   - Historical comparison
 
-### CI/CD
-- [x] `.github/workflows/security-tests.yml` - GitHub Actions workflow
-  - Multi-version Node.js testing
-  - Scheduled daily runs
-  - Artifact upload
-
 ## File Structure
 
 ```
 graphql-eval/
-├── .github/
-│   └── workflows/
-│       └── security-tests.yml       # CI/CD configuration
 ├── evals/
 │   ├── graphql-security.yml         # Security eval definition
 │   └── graphql-complexity.yml       # Complexity eval definition
@@ -135,11 +126,10 @@ graphql-eval/
 - Architecture diagrams
 - Contribution guidelines
 
-### 7. CI/CD Ready
-- GitHub Actions workflow
-- Multi-version testing
-- Secret management
-- Artifact upload
+### 7. Production Ready
+- Comprehensive examples
+- Error handling
+- Best practices
 - Scheduled runs
 
 ## How to Use (3 Commands)
@@ -215,13 +205,7 @@ Run as part of your regular test suite:
 npm test
 ```
 
-### Option 2: CI/CD Integration
-Use the provided GitHub Actions workflow:
-```yaml
-# .github/workflows/security-tests.yml is ready to use
-```
-
-### Option 3: Programmatic Integration
+### Option 2: Programmatic Integration
 Use the runner directly in your code:
 ```javascript
 const { runEval } = require('@vibecheck/runner');
@@ -277,10 +261,10 @@ expect(passRate).toBeGreaterThanOrEqual(90); // Change 90 to your threshold
    - Include your actual field names and relationships
    - Test against real queries from your production logs
 
-4. **Integrate into CI/CD**
-   - Add to your GitHub Actions workflows
-   - Set up API key as a secret
+4. **Integrate into your workflow**
+   - Add to your test suite
    - Configure pass rate thresholds
+   - Monitor results
 
 5. **Monitor in Production**
    - Use `examples/advanced-integration.js` for inspiration
@@ -311,7 +295,6 @@ This is the FIRST example of using Vibecheck's programmatic runner for GraphQL s
 ✅ Tests pass with reasonable pass rates
 ✅ Documentation is clear and comprehensive
 ✅ Examples demonstrate real-world usage
-✅ CI/CD integration is straightforward
 ✅ Customization is easy
 
 ## Final Notes
@@ -322,9 +305,7 @@ This repository is ready for immediate use by Airbnb engineering teams. The setu
 - **Standard**: Uses familiar npm/Jest workflows
 - **Documented**: Multiple guides for different needs
 - **Extensible**: Easy to customize and extend
-- **Production-Ready**: Includes CI/CD and monitoring examples
-
-The key innovation is making AI-based security evaluation feel like standard unit testing, removing friction and enabling rapid adoption.
+- **Production-Ready**: Includes monitoring and integration examples
 
 ---
 

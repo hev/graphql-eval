@@ -191,49 +191,6 @@ expect(passRate).toBeGreaterThanOrEqual(95);
 2. Create a corresponding test file in `test/`
 3. Run `npm test` to verify
 
-## CI/CD Integration
-
-### GitHub Actions Example
-
-```yaml
-name: GraphQL Security Tests
-
-on: [push, pull_request]
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-      - run: npm install
-      - run: npm test
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-```
-
-### Jenkins Example
-
-```groovy
-pipeline {
-    agent any
-    stages {
-        stage('Install') {
-            steps {
-                sh 'npm install'
-            }
-        }
-        stage('Test') {
-            steps {
-                sh 'npm test'
-            }
-        }
-    }
-}
-```
-
 ## Environment Variables
 
 Set your Anthropic API key before running tests:
