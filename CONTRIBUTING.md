@@ -1,6 +1,6 @@
 # Contributing to the GraphQL Security Evaluation Suite
 
-Thank you for your interest in improving Airbnb's GraphQL security evaluations!
+Thank you for your interest in improving your organization's GraphQL security evaluations!
 
 ## Adding New Test Cases
 
@@ -111,4 +111,4 @@ When adding features, update:
 
 ## Questions?
 
-Contact the Airbnb Security Team or open an issue.
+Contact the your organization Security Team or open an issue.

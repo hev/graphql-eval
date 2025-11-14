@@ -1,4 +1,4 @@
-# Safe GraphQL Queries for Airbnb
+# Safe GraphQL Queries
 # These queries follow security best practices
 
 # Simple user lookup with specific fields

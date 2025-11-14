@@ -5,7 +5,7 @@ Get the GraphQL Security Evaluation Suite running in under 2 minutes.
 ## Prerequisites
 
 - Node.js 18+ installed
-- Anthropic API key ([get one here](https://console.anthropic.com/))
+- Vibecheck API key
 
 ## Setup Steps
 
@@ -28,13 +28,13 @@ cp .env.example .env
 Edit `.env` and add your API key:
 
 ```
-ANTHROPIC_API_KEY=your-actual-api-key-here
+VIBECHECK_API_KEY=your-actual-api-key-here
 ```
 
 Or export it directly:
 
 ```bash
-export ANTHROPIC_API_KEY='your-actual-api-key-here'
+export VIBECHECK_API_KEY='your-actual-api-key-here'
 ```
 
 ### 3. Run Tests
@@ -83,12 +83,12 @@ The tests:
 
 Run `npm install` to install dependencies.
 
-### "ANTHROPIC_API_KEY is not set"
+### "VIBECHECK_API_KEY is not set"
 
 Make sure you've set the environment variable:
 
 ```bash
-export ANTHROPIC_API_KEY='your-key'
+export VIBECHECK_API_KEY='your-key'
 ```
 
 ### Tests are slow

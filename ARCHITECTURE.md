@@ -6,7 +6,7 @@ This document describes the architecture of the GraphQL Security Evaluation Suit
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                     Airbnb Developer                        │
+│                     your organization Developer                        │
 │                   (runs `npm test`)                         │
 └────────────────────────┬────────────────────────────────────┘
                          │
@@ -387,7 +387,7 @@ async function customRunner(evalPath, options) {
 
 ```javascript
 // GOOD: Environment variable
-process.env.ANTHROPIC_API_KEY
+process.env.VIBECHECK_API_KEY
 
 // BAD: Hardcoded
 const key = "sk-ant-..."; // NEVER DO THIS

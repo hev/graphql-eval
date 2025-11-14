@@ -1,5 +1,5 @@
 {
-  "name": "@airbnb/graphql-security-eval",
+  "name": "graphql-security-eval",
   "version": "1.0.0",
   "description": "GraphQL security evaluation suite using Vibecheck's programmatic runner",
   "main": "index.js",

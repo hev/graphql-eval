@@ -1,6 +1,6 @@
-# Airbnb GraphQL Security Evaluation Suite
+# GraphQL Security Evaluation Suite
 
-Evaluation framework for detecting GraphQL security vulnerabilities using Vibecheck.
+An example of using the Vibecheck DSL for assessing LLM generated GraphQL queries for safety and security.
 
 > **Note**: Vibecheck is currently in developer preview. See [github.com/hev/vibecheck](https://github.com/hev/vibecheck) for more information.
 
@@ -193,17 +193,17 @@ expect(passRate).toBeGreaterThanOrEqual(95);
 
 ## Environment Variables
 
-Set your Anthropic API key before running tests:
+Set your Vibecheck API key before running tests:
 
 ```bash
-export ANTHROPIC_API_KEY='your-api-key-here'
+export VIBECHECK_API_KEY='your-api-key-here'
 npm test
 ```
 
 Or use a `.env` file (not committed to git):
 
 ```bash
-echo "ANTHROPIC_API_KEY=your-api-key-here" > .env
+echo "VIBECHECK_API_KEY=your-api-key-here" > .env
 ```
 
 ## Example Queries
@@ -246,10 +246,10 @@ testTimeout: 120000, // 2 minutes
 
 ### API Key Issues
 
-Ensure your `ANTHROPIC_API_KEY` environment variable is set:
+Ensure your `VIBECHECK_API_KEY` environment variable is set:
 
 ```bash
-echo $ANTHROPIC_API_KEY  # Should print your key
+echo $VIBECHECK_API_KEY  # Should print your key
 ```
 
 ### Failed Test Cases
@@ -274,7 +274,6 @@ If evaluations fail:
 For questions about:
 
 - **Vibecheck**: See [Vibecheck documentation](https://github.com/hev/vibecheck)
-- **This Repository**: Open an issue or contact the Airbnb Security Team
 - **GraphQL Security**: Review [GraphQL Security Best Practices](https://cheatsheetseries.owasp.org/cheatsheets/GraphQL_Cheat_Sheet.html)
 
 ## License

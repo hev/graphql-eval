@@ -6,7 +6,7 @@ Quick reference for common tasks and commands.
 
 ```bash
 npm install                  # Install dependencies
-export ANTHROPIC_API_KEY='...'  # Set API key
+export VIBECHECK_API_KEY='...'  # Set API key
 npm test                     # Run all evaluations
 ```
 
@@ -143,7 +143,7 @@ const [security, complexity] = await Promise.all([
 
 ```bash
 # Required
-ANTHROPIC_API_KEY=sk-ant-...
+VIBECHECK_API_KEY=sk-ant-...
 
 # Optional
 VIBECHECK_LOG_LEVEL=info
@@ -185,9 +185,9 @@ test('long running test', async () => {
 npm install
 ```
 
-### "ANTHROPIC_API_KEY is not set"
+### "VIBECHECK_API_KEY is not set"
 ```bash
-export ANTHROPIC_API_KEY='your-key'
+export VIBECHECK_API_KEY='your-key'
 ```
 
 ### Tests timeout

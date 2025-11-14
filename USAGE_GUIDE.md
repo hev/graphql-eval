@@ -400,7 +400,7 @@ test('results have expected structure', async () => {
 **Solution**: Review failed test outputs to understand model behavior
 
 **Issue**: API errors
-**Solution**: Verify ANTHROPIC_API_KEY is set correctly
+**Solution**: Verify VIBECHECK_API_KEY is set correctly
 
 ## Next Steps
 

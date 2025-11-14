@@ -172,7 +172,7 @@ Snapshots:   0 total
 Time:        24.1 s
 ```
 
-## Prerequisites for Airbnb Team
+## Prerequisites for your organization Team
 
 1. **Node.js 18+** installed
 2. **Anthropic API Key** from https://console.anthropic.com/
@@ -185,7 +185,7 @@ Time:        24.1 s
 cp .env.example .env
 
 # Edit .env and add your API key
-ANTHROPIC_API_KEY=your-key-here
+VIBECHECK_API_KEY=your-key-here
 ```
 
 ## Available npm Scripts
@@ -244,7 +244,7 @@ expect(passRate).toBeGreaterThanOrEqual(90); // Change 90 to your threshold
 - **Complete test suite**: 20-40 seconds (both evals)
 - **Cost per run**: ~$0.01-0.05 (using Claude Sonnet)
 
-## Next Steps for Airbnb
+## Next Steps for your organization
 
 1. **Clone and Test**
    - Clone the repository
@@ -299,7 +299,7 @@ This is the FIRST example of using Vibecheck's programmatic runner for GraphQL s
 
 ## Final Notes
 
-This repository is ready for immediate use by Airbnb engineering teams. The setup is:
+This repository is ready for immediate use by your organization engineering teams. The setup is:
 
 - **Turnkey**: Clone, install, test
 - **Standard**: Uses familiar npm/Jest workflows
