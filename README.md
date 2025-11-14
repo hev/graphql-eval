@@ -1,18 +1,8 @@
 # Airbnb GraphQL Security Evaluation Suite
 
-A production-ready evaluation framework for detecting GraphQL security vulnerabilities using **Vibecheck's NEW programmatic access feature** via the `@vibecheck/runner` npm package.
+Evaluation framework for detecting GraphQL security vulnerabilities using Vibecheck.
 
-## What's New: Programmatic Access
-
-This repository showcases Vibecheck's latest capability - **programmatic evaluation execution through npm**. Instead of relying on the Vibecheck CLI, you can now integrate evaluations directly into your existing test suites and CI/CD pipelines using standard JavaScript/TypeScript tooling.
-
-### Why This Matters for Airbnb
-
-- **Seamless CI/CD Integration**: Run evals as part of your standard `npm test` workflow
-- **Developer-Friendly**: Engineers can work with familiar Jest syntax and patterns
-- **No CLI Dependencies**: No need to install or manage the Vibecheck CLI separately
-- **Standard Tooling**: Leverage existing Jest features (watch mode, coverage, parallel execution)
-- **Better DevEx**: Integrated error reporting, test filtering, and debugging support
+> **Note**: Vibecheck is currently in developer preview. See [github.com/hev/vibecheck](https://github.com/hev/vibecheck) for more information.
 
 ## Quick Start
 
@@ -137,9 +127,7 @@ Each test validates specific aspects of the evaluation:
 
 ## How It Works
 
-### The Programmatic Runner
-
-The tests use Vibecheck's `@vibecheck/runner` package to execute evaluations programmatically:
+The tests use the `@vibecheck/runner` package to execute evaluations:
 
 ```javascript
 const { runEval } = require('@vibecheck/runner');
@@ -316,19 +304,6 @@ If evaluations fail:
 3. Consider adjusting the grading rubric in the YAML file
 4. Verify your test cases are well-defined
 
-## Benefits Over CLI Approach
-
-| Feature | CLI Approach | Programmatic Approach |
-|---------|-------------|----------------------|
-| Integration | Separate tool | Native npm test |
-| CI/CD Setup | Custom scripts | Standard test commands |
-| Developer Experience | Learn new CLI | Use familiar Jest |
-| Debugging | Limited | Full Jest debugging |
-| Reporting | Custom | Jest reporters |
-| Watch Mode | N/A | Built-in |
-| Coverage | N/A | Built-in |
-| IDE Integration | Limited | Full support |
-
 ## Next Steps
 
 1. **Run the tests**: `npm test` to see it in action
@@ -348,7 +323,3 @@ For questions about:
 ## License
 
 MIT
-
----
-
-**Built with Vibecheck's Programmatic Runner** - Evaluations made easy.

@@ -64,12 +64,12 @@ Tests:       11 passed, 11 total
 
 ## What Just Happened?
 
-You just ran GraphQL security evaluations using Vibecheck's programmatic runner! The tests:
+The tests:
 
 1. Loaded evaluation definitions from `evals/` directory
-2. Executed them using the `@vibecheck/runner` npm package
-3. Validated that the AI model correctly identifies security vulnerabilities
-4. Reported results in standard Jest format
+2. Executed them using the `@vibecheck/runner` package
+3. Validated that the model correctly identifies security vulnerabilities
+4. Reported results in Jest format
 
 ## Next Steps
 
