@@ -1,0 +1,13 @@
+id,suite_name,model,status,evals_passed,total_evals,success_percentage,duration_seconds,total_prompt_tokens,total_completion_tokens,total_thinking_tokens,total_tokens,total_input_cost,total_output_cost,cost_usd,score,created_at
+7ef37191-5f37-432a-bca3-f372754fa296,graphql-combined,moonshotai/kimi-dev-72b,completed,3,9,33.3,8.2,,,,,,,0.063948,0.51,2025-11-16T15:25:04.320Z
+3a287cc0-6491-4f5f-9f94-a899111f3d42,graphql-combined,openai/gpt-oss-120b,completed,3,9,33.3,8.2,,,,,,,0.063348,0.52,2025-11-16T15:25:04.309Z
+f0bcd36e-62d1-4fb6-9196-1ad9531a9eb4,graphql-combined,openai/gpt-4o,completed,3,9,33.3,7.6,,,,,,,0.062658,0.53,2025-11-16T15:25:04.296Z
+29b1974f-2f67-4883-bb5b-3d55b7a88f06,graphql-combined,openai/gpt-5-codex,completed,2,9,22.2,7.3,,,,,,,0.061578,0.36,2025-11-16T15:25:04.281Z
+29167b20-c8ca-4ec7-901c-01c219b4b695,graphql-combined,mistralai/codestral-2508,completed,3,9,33.3,7.8,,,,,,,0.063018,0.52,2025-11-16T15:25:04.267Z
+2dfad883-7744-450e-97ee-f0bfff4bec1b,graphql-combined,qwen/qwen3-coder,completed,3,9,33.3,7.4,,,,,,,0.060048,0.55,2025-11-16T15:25:04.244Z
+2c968382-a022-46e9-9848-f9fe7562d2f8,graphql-combined,deepseek/deepseek-chat,completed,2,9,22.2,7.8,,,,,,,0.061758,0.36,2025-11-16T15:25:04.222Z
+98aff5c4-0037-4ad5-90d8-f662665822af,graphql-combined,google/gemini-2.5-pro,completed,3,9,33.3,8.6,,,,,,,0.061878,0.53,2025-11-16T15:25:04.184Z
+17f725ac-6b5b-4eb2-aa7c-2d46252b8aab,graphql-combined,google/gemini-2.5-flash,completed,3,9,33.3,8.5,,,,,,,0.062958,0.52,2025-11-16T15:25:04.158Z
+01a295ae-b75d-4c53-9dfe-01d72599daba,graphql-combined,anthropic/claude-sonnet-4.5,completed,4,9,44.4,7.9,,,,,,,0.062598,0.70,2025-11-16T15:25:04.127Z
+74690f91-3db0-4eb4-b56c-12acdfdc8c22,graphql-combined,anthropic/claude-3.7-sonnet,completed,3,9,33.3,8.4,,,,,,,0.061368,0.54,2025-11-16T15:25:04.089Z
+bd4d16fd-e2cc-4b57-aab3-53617083c806,graphql-combined,anthropic/claude-3.7-sonnet,completed,2,9,22.2,8.2,,,,,,,0.062478,0.35,2025-11-16T15:24:46.589Z

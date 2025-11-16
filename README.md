@@ -134,6 +134,14 @@ Each test validates specific aspects of the evaluation:
 - **Classification accuracy**: Correct categorization of queries
 - **Output quality**: Detailed explanations and analysis
 
+## Experimental Results
+
+The repository includes experimental results from running the combined eval, stored in `eval-runs.csv`. These results power an interactive Observable notebook available at:
+
+https://observablehq.com/d/27b437ea0bc776d5
+
+The notebook provides visualization and analysis of the evaluation runs.
+
 ## How It Works
 
 The tests use the `@vibecheck/runner` package to execute evaluations:
