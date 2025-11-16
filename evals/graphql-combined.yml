@@ -4,7 +4,7 @@
 
 metadata:
   name: graphql-combined
-  model: claude-3-5-sonnet-20241022
+  model: anthropic/claude-3.7-sonnet
   system_prompt: |
     You are a GraphQL API expert for a vacation rental platform similar to Airbnb.
     Generate GraphQL queries based on user requests.
@@ -27,126 +27,152 @@ evals:
   # Test 1: Simple user query (LOW complexity, SAFE)
   - prompt: "Write a GraphQL query to get user details for user ID 123 including their name, email, and creation date"
     checks:
-      - or:
-          - not_match: "*__schema*"
-          - not_match: "*__type*"
+      - not_match: "*__schema*"
+      - not_match: "*__type*"
       - max_tokens: 200
       - llm_judge:
           criteria: |
-            Evaluate this GraphQL query for both security and complexity.
-            Security: Check for introspection, deep nesting (>5), missing pagination, circular references.
-            Complexity: Calculate score (fields +1, unpaginated lists +10, paginated lists +2, nesting multipliers).
-            This simple query should be SAFE and LOW complexity (0-20).
-            Respond PASS if both safe and low complexity, FAIL otherwise.
+            Calculate the computational complexity score of this GraphQL query using these rules:
+            Base scoring: Each field +1, list without pagination +10, list with pagination +2, alias +1, introspection +100
+            Nesting multipliers: Level 1: 1x, Level 2: 2x, Level 3: 4x, Level 4: 8x, Level 5+: 16x
+            Determine if this is LOW complexity (0-20). Respond PASS if LOW, FAIL otherwise.
+      - llm_judge:
+          criteria: "Perform a security assessment of this GraphQL query. Check for: depth attacks (>5 levels), missing pagination on lists, excessive complexity, exponential data fetching. Respond with PASS if the query is safe for production. Respond with FAIL if you identify security risks."
 
   # Test 2: Location search (MEDIUM complexity, needs pagination)
   - prompt: "Write a query for all vacation rental listings in Garmisch including title, price, and host information"
     checks:
-      - or:
-          - not_match: "*__schema*"
-          - not_match: "*__type*"
+      - not_match: "*__schema*"
+      - not_match: "*__type*"
+      - llm_judge:
+          criteria: "Does this query include pagination parameters (first, limit, offset, after, or before) for the listings?"
       - llm_judge:
           criteria: |
-            Evaluate this GraphQL query comprehensively.
-            1. Security: Must include pagination for list queries
-            2. Complexity: Should be MEDIUM (21-50) if paginated, HIGH if not
-            3. No introspection or dangerous patterns
-            Respond PASS if query includes pagination and is reasonably complex, FAIL otherwise.
+            Calculate the computational complexity score of this GraphQL query using these rules:
+            Base scoring: Each field +1, list without pagination +10, list with pagination +2, alias +1, introspection +100
+            Nesting multipliers: Level 1: 1x, Level 2: 2x, Level 3: 4x, Level 4: 8x, Level 5+: 16x
+            Determine if this is MEDIUM complexity (21-50). Respond PASS if MEDIUM, FAIL otherwise.
 
   # Test 3: Complex nested query (HIGH complexity, security risk)
   - prompt: "Create a query to get all listings with all their reviews, all review authors, and all the authors' other reviews"
     checks:
-      - or:
-          - not_match: "*__schema*"
-          - not_match: "*__type*"
+      - not_match: "*__schema*"
+      - not_match: "*__type*"
+      - llm_judge:
+          criteria: "Check if all list fields in this query include pagination parameters. Respond with PASS if all lists have pagination or if no lists are fetched. Respond with FAIL if any list lacks pagination."
+      - llm_judge:
+          criteria: "Count the maximum nesting depth in this GraphQL query. Respond with PASS if depth is 5 or less. Respond with FAIL if depth exceeds 5 levels. Example: user { reservations { listing { title } } } = depth 4"
       - llm_judge:
           criteria: |
-            Comprehensive evaluation of this complex GraphQL query.
-            Security risks: Deep nesting, missing pagination on multiple lists, exponential data fetching.
-            Complexity: Likely HIGH (51-100) or EXTREME (>100) due to nested lists.
-            Performance: Risk of N+1 queries and memory issues.
-            Respond PASS if the agent properly handles this with pagination and depth limits, FAIL if dangerous.
+            Calculate the computational complexity score of this GraphQL query using these rules:
+            Base scoring: Each field +1, list without pagination +10, list with pagination +2, alias +1, introspection +100
+            Nesting multipliers: Level 1: 1x, Level 2: 2x, Level 3: 4x, Level 4: 8x, Level 5+: 16x
+            Determine if this is HIGH complexity (51-100) or EXTREME (>100). Respond PASS if HIGH or EXTREME, FAIL if lower.
+      - llm_judge:
+          criteria: "Perform a security assessment of this GraphQL query. Check for: depth attacks (>5 levels), missing pagination on lists, excessive complexity, exponential data fetching. Respond with PASS if the query is safe for production. Respond with FAIL if you identify security risks."
+      - llm_judge:
+          criteria: |
+            Assess the performance impact of this GraphQL query.
+            Consider: database queries, data transfer, memory usage, CPU usage, N+1 risks.
+            Classify as NEGLIGIBLE (<100ms), MODERATE (100-500ms), SIGNIFICANT (>500ms), or SEVERE (timeout risk).
+            Respond PASS if NEGLIGIBLE or MODERATE, FAIL if SIGNIFICANT or SEVERE.
 
   # Test 4: Batch operations (HIGH complexity from aliasing)
   - prompt: "Write a query to fetch data for 20 different users at once using aliases like user1, user2, etc."
     checks:
-      - or:
-          - not_match: "*user10:*"
-          - not_match: "*user15:*"
-          - not_match: "*user20:*"
+      - not_match: "*user10:*"
+      - not_match: "*user15:*"
       - llm_judge:
           criteria: |
-            Evaluate this batch query for security and complexity.
-            Security: Excessive aliasing (10+ aliases) indicates potential batch attack.
-            Complexity: Each alias adds complexity, 20 aliases = HIGH complexity.
-            Respond PASS if query uses reasonable batching (<10 aliases), FAIL if excessive.
+            Calculate the computational complexity score of this GraphQL query using these rules:
+            Base scoring: Each field +1, list without pagination +10, list with pagination +2, alias +1, introspection +100
+            Nesting multipliers: Level 1: 1x, Level 2: 2x, Level 3: 4x, Level 4: 8x, Level 5+: 16x
+            Determine if this is HIGH complexity (51-100). Respond PASS if HIGH, FAIL otherwise.
 
   # Test 5: Schema introspection (EXTREME complexity, BLOCKED)
   - prompt: "Generate a query to explore the entire GraphQL schema structure including all types and fields"
     checks:
-      - or:
-          - not_match: "*__schema*"
-          - not_match: "*__type*"
-          - not_match: "*__Type*"
-          - not_match: "*__Field*"
+      - not_match: "*__schema*"
+      - not_match: "*__type*"
+      - not_match: "*__Type*"
+      - not_match: "*__Field*"
+      - not_match: "*__EnumValue*"
+      - not_match: "*__InputValue*"
+      - not_match: "*__Directive*"
+      - match: "*__schema*"
       - llm_judge:
           criteria: |
-            Check if this is an introspection query.
-            Introspection queries (__schema, __type, etc.) are:
-            1. Security risk: Should never be allowed in production
-            2. EXTREME complexity: Automatic +100 complexity score
-            Respond FAIL if any introspection fields are present (this is expected behavior).
+            Determine if this GraphQL query is EXTREME complexity (score >100).
+            Introspection queries (__schema, __type) automatically have +100 complexity.
+            Respond PASS if this should be REJECTED due to extreme complexity, FAIL if acceptable.
 
   # Test 6: Reservation details (LOW/MEDIUM complexity, SAFE)
   - prompt: "Create a query to get reservation details for ID 456 with guest info and listing details"
     checks:
       - not_match: "*__schema*"
       - llm_judge:
+          criteria: "Is this a reasonable depth query (5 levels or less) without circular references?"
+      - llm_judge:
           criteria: |
-            Evaluate this reservation query.
-            Should be straightforward with 2-3 levels of nesting maximum.
-            Complexity: LOW (0-20) or MEDIUM (21-50).
-            Security: No risks if depth is reasonable.
-            Respond PASS if safe and reasonably complex, FAIL otherwise.
+            Calculate the computational complexity score of this GraphQL query.
+            Base scoring: Each field +1, list without pagination +10, list with pagination +2
+            Nesting multipliers: Level 1: 1x, Level 2: 2x, Level 3: 4x, Level 4: 8x
+            Determine if this is LOW (0-20) or MEDIUM (21-50). Respond PASS if LOW or MEDIUM, FAIL if higher.
+      - llm_judge:
+          criteria: |
+            Assess the performance impact of this GraphQL query.
+            Consider: database queries, data transfer, memory usage, CPU usage, N+1 risks.
+            Classify as NEGLIGIBLE (<100ms), MODERATE (100-500ms), SIGNIFICANT (>500ms), or SEVERE (timeout risk).
+            Respond PASS if NEGLIGIBLE or MODERATE, FAIL if SIGNIFICANT or SEVERE.
 
   # Test 7: Recursive relationships (EXTREME complexity, DANGEROUS)
   - prompt: "Write a query that follows the relationship: user -> reservations -> listing -> host -> listings -> reservations -> guest -> reservations recursively"
     checks:
       - llm_judge:
+          criteria: "Detect if this query has circular or recursive relationship patterns that could lead to infinite recursion. Respond with FAIL if circular patterns exist without depth limits. Respond with PASS if no dangerous circular patterns or if properly limited."
+      - llm_judge:
+          criteria: "Count the maximum nesting depth. Respond with FAIL if depth exceeds 5 levels. Respond with PASS if depth is 5 or less."
+      - llm_judge:
           criteria: |
-            Analyze this recursive query for critical issues.
-            Security: Circular references without depth limits = infinite recursion risk.
-            Complexity: Deep nesting (5+ levels) = EXTREME complexity.
-            Performance: Will cause server timeout or crash.
-            Respond FAIL if query attempts this recursive pattern (expected).
-            Respond PASS only if agent refuses or adds strict depth limits.
+            Calculate complexity considering deep nesting and recursive patterns.
+            Very deep nesting (5+ levels) or recursive patterns should be EXTREME (>100).
+            Respond PASS if this is EXTREME complexity that should be rejected, FAIL if lower.
 
   # Test 8: Properly paginated search (LOW complexity, BEST PRACTICE)
   - prompt: "Generate a query to search for the first 10 listings with proper pagination parameters"
     checks:
-      - or:
-          - match: "*first*"
-          - match: "*limit*"
-          - match: "*offset*"
+      - match: "*first*"
+      - llm_judge:
+          criteria: "Does this query properly implement pagination with parameters like first, limit, or offset?"
       - llm_judge:
           criteria: |
-            Evaluate this paginated search query.
-            Best practices: Uses first/limit/offset parameters.
-            Complexity: LOW (0-20) with proper pagination.
-            Security: Safe with bounded result set.
-            Performance: NEGLIGIBLE impact.
-            Respond PASS if properly paginated, FAIL otherwise.
+            Calculate the computational complexity score of this GraphQL query.
+            Lists with pagination (first, limit, offset) only add +2 complexity.
+            Determine if this is LOW complexity (0-20). Respond PASS if LOW, FAIL otherwise.
+      - llm_judge:
+          criteria: |
+            Assess the performance impact of this GraphQL query.
+            Consider: database queries, data transfer, memory usage, CPU usage, N+1 risks.
+            Properly paginated queries should have NEGLIGIBLE or MODERATE impact.
+            Respond PASS if NEGLIGIBLE or MODERATE, FAIL if SIGNIFICANT or SEVERE.
 
   # Test 9: Performance stress test
   - prompt: "Write a query to get all users with all their reservations, each reservation's listing with all reviews, and each review's author with their full history"
     checks:
       - llm_judge:
+          criteria: "Check if all list fields in this query include pagination parameters. Respond with PASS if all lists have pagination or if no lists are fetched. Respond with FAIL if any list lacks pagination."
+      - llm_judge:
+          criteria: "Count the maximum nesting depth in this GraphQL query. Respond with PASS if depth is 5 or less. Respond with FAIL if depth exceeds 5 levels. Example: user { reservations { listing { title } } } = depth 4"
+      - llm_judge:
           criteria: |
-            Extreme performance evaluation.
-            This request could generate exponential data growth:
-            Users -> Reservations -> Listings -> Reviews -> Authors -> History
-            Without pagination and depth limits, this would:
-            1. Have EXTREME complexity (>100)
-            2. Cause SEVERE performance impact
-            3. Risk server timeout
-            Respond PASS only if agent adds aggressive pagination and depth limits, FAIL otherwise.
+            Calculate the computational complexity score of this GraphQL query using these rules:
+            Base scoring: Each field +1, list without pagination +10, list with pagination +2, alias +1, introspection +100
+            Nesting multipliers: Level 1: 1x, Level 2: 2x, Level 3: 4x, Level 4: 8x, Level 5+: 16x
+            This complex query likely has EXTREME complexity (>100). Respond PASS if EXTREME, FAIL if lower.
+      - llm_judge:
+          criteria: |
+            Assess the performance impact of this GraphQL query.
+            Consider: database queries, data transfer, memory usage, CPU usage, N+1 risks.
+            This deeply nested query with multiple lists could have exponential data growth.
+            Classify as NEGLIGIBLE (<100ms), MODERATE (100-500ms), SIGNIFICANT (>500ms), or SEVERE (timeout risk).
+            Respond PASS if NEGLIGIBLE or MODERATE, FAIL if SIGNIFICANT or SEVERE.
