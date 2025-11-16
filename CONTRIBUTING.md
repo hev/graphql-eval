@@ -42,7 +42,7 @@ To create a completely new evaluation:
 touch evals/my-new-eval.yml
 ```
 
-2. **Define the evaluation** following the Vibecheck DSL:
+2. **Define the evaluation** following the vibe check DSL:
 
 ```yaml
 name: my-new-eval

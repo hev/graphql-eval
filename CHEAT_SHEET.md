@@ -1,4 +1,4 @@
-# Vibecheck GraphQL Eval - Cheat Sheet
+# vibecheck GraphQL Eval - Cheat Sheet
 
 Quick reference for common tasks and commands.
 
@@ -276,7 +276,7 @@ find . -type f | grep -v node_modules | sort
 
 1. Check documentation files
 2. Review example code
-3. Check Vibecheck docs: https://github.com/hev/vibecheck
+3. Check vibecheck docs: https://github.com/hev/vibecheck
 4. Open an issue
 
 ---

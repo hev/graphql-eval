@@ -12,7 +12,7 @@ describe('GraphQL Security Evaluation', () => {
   const evalPath = path.join(__dirname, '../evals/graphql-security.yml');
 
   test('should run security evaluation and pass all test cases', async () => {
-    // Run the evaluation programmatically using Vibecheck's npm runner
+    // Run the evaluation programmatically using vibecheck's npm runner
     const results = await runEval(evalPath);
 
     // Verify the evaluation completed successfully

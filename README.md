@@ -1,22 +1,27 @@
 # GraphQL Security Evaluation Suite
 
-An example of using the Vibecheck DSL for assessing LLM generated GraphQL queries for safety and security.
+An example of using the vibe check DSL for assessing LLM generated GraphQL queries for safety and security.
 
-> **Note**: Vibecheck is currently in developer preview. See [github.com/hev/vibecheck](https://github.com/hev/vibecheck) for more information.
+> **Note**: vibecheck is currently in developer preview. See [github.com/hev/vibecheck](https://github.com/hev/vibecheck) for more information.
+
+
 
 ## Quick Start
 
-Get up and running in 3 commands:
+Get up and running (copy/paste):
 
 ```bash
 # 1. Clone the repository
-git clone <repository-url>
+git clone https://github.com/hev/graphql-eval
 cd graphql-eval
 
-# 2. Install dependencies (includes Vibecheck runner)
+# 2. Set your API key
+export VIBECHECK_API_KEY='YOUR_API_KEY_HERE'
+
+# 3. Install dependencies (includes vibecheck runner)
 npm install
 
-# 3. Run the evaluations
+# 4. Run the evaluations
 npm test
 ```
 
@@ -50,17 +55,21 @@ Estimates computational cost of queries and classifies them as:
 
 ```
 graphql-eval/
-├── evals/                          # Vibecheck evaluation definitions
+├── evals/                          # vibe check evaluation definitions
 │   ├── graphql-security.yml        # Security vulnerability detection
 │   └── graphql-complexity.yml      # Query complexity estimation
 ├── test/                           # Jest test suites
 │   ├── graphql-security.test.js    # Security eval tests
 │   └── graphql-complexity.test.js  # Complexity eval tests
+├── examples/                       # Integration examples
+│   ├── custom-query-check.js       # Real-time query validation
+│   └── advanced-integration.js     # Production patterns & monitoring
 ├── test-data/                      # Example GraphQL queries
 │   ├── safe-queries.graphql        # Examples of secure queries
 │   └── dangerous-queries.graphql   # Examples of attack patterns
 ├── package.json                    # Dependencies including @vibecheck/runner
 ├── jest.config.js                  # Jest configuration
+├── CHEAT_SHEET.md                  # Quick reference guide
 └── README.md                       # This file
 ```
 
@@ -151,9 +160,9 @@ results.test_results.forEach(test => {
 
 ### Integration with Jest
 
-The Jest tests wrap the Vibecheck runner and provide additional validation:
+The Jest tests wrap the vibecheck runner and provide additional validation:
 
-1. **Run the evaluation**: Execute the Vibecheck eval using `runEval()`
+1. **Run the evaluation**: Execute the vibe check eval using `runEval()`
 2. **Parse results**: Extract pass rates, individual test results, and outputs
 3. **Assert expectations**: Validate that the model correctly identifies patterns
 4. **Provide feedback**: Clear error messages when tests fail
@@ -193,7 +202,7 @@ expect(passRate).toBeGreaterThanOrEqual(95);
 
 ## Environment Variables
 
-Set your Vibecheck API key before running tests:
+Set your vibecheck API key before running tests:
 
 ```bash
 export VIBECHECK_API_KEY='your-api-key-here'
@@ -227,30 +236,66 @@ The `test-data/` directory contains example queries for reference:
 
 Use these examples to understand what patterns the evaluations detect.
 
+## Integration Examples
+
+The `examples/` directory contains practical integration patterns:
+
+### [custom-query-check.js](examples/custom-query-check.js)
+
+Shows how to validate individual GraphQL queries in real-time:
+
+```javascript
+const { checkQuerySecurity } = require('./examples/custom-query-check');
+
+// Check a single query
+const result = await checkQuerySecurity(userQuery);
+if (!result.safe) {
+  console.log('Dangerous query detected:', result.analysis);
+}
+```
+
+Use this pattern to:
+- Integrate security checks into GraphQL middleware
+- Validate queries before execution
+- Build real-time query monitoring
+
+### [advanced-integration.js](examples/advanced-integration.js)
+
+Demonstrates production-ready patterns:
+
+```javascript
+const { runAllEvaluations, generateReport } = require('./examples/advanced-integration');
+
+// Run all evals in parallel
+const results = await runAllEvaluations();
+
+// Generate detailed report
+const report = generateReport(results);
+```
+
+Includes examples of:
+- Parallel evaluation execution
+- Custom reporting and aggregation
+- Threshold-based alerting
+- Historical result tracking
+- Comparison with previous runs
+
+## Quick Reference
+
+See [CHEAT_SHEET.md](CHEAT_SHEET.md) for:
+- Common commands and patterns
+- Quick troubleshooting tips
+- Code snippets for common tasks
+- Result structure reference
+- Environment variable options
+
 ## Performance Considerations
 
 - **Test Duration**: Each evaluation makes LLM API calls, so tests take 1-3 seconds each
-- **Timeout**: Jest timeout is set to 60 seconds to accommodate LLM latency
-- **Parallel Execution**: Jest runs tests in parallel by default for better performance
-- **Cost**: Each test case incurs minimal API costs (fractions of a cent with Claude models)
+- **Timeout**: Jest timeout is set to 60 seconds to accommodate LLM latency. The vibe check platform currently limits to 32 eval prompts concurrently. Additionally there is a limit of 5 in flight runs simultanously. Large experiments across many models will require longer timeouts in Jest. 
+- **Parallel Execution**: Jest runs eval suite in parallel by default for better performance
+- **Cost**: Cost and run details can be viewed from the CLI using `vibe get runs` 
 
-## Troubleshooting
-
-### Tests Timeout
-
-Increase the Jest timeout in `jest.config.js`:
-
-```javascript
-testTimeout: 120000, // 2 minutes
-```
-
-### API Key Issues
-
-Ensure your `VIBECHECK_API_KEY` environment variable is set:
-
-```bash
-echo $VIBECHECK_API_KEY  # Should print your key
-```
 
 ### Failed Test Cases
 
@@ -263,17 +308,18 @@ If evaluations fail:
 
 ## Next Steps
 
-1. **Run the tests**: `npm test` to see it in action
-2. **Review results**: Check which patterns are detected correctly
-3. **Customize**: Add your own GraphQL queries and test cases
-4. **Integrate**: Add to your CI/CD pipeline
-5. **Iterate**: Refine evaluations based on results
+1. **Install the CLI**: Install the [vibecheck CLI](https://github.com/hev/vibecheck) to view runs, inspect details, and manage evaluations: `npm install -g vibecheck-cli`
+2. **Run the tests**: `npm test` to see it in action
+3. **Review results**: Use `vibe get runs` to see all runs, `vibe get runs --suite <name>` for specific suites, and check which patterns are detected correctly
+4. **Customize**: Add your own GraphQL queries and test cases
+5. **Integrate**: Add to your CI/CD pipeline
+6. **Iterate**: Refine evaluations based on results
 
 ## Support
 
 For questions about:
 
-- **Vibecheck**: See [Vibecheck documentation](https://github.com/hev/vibecheck)
+- **vibecheck**: See [vibecheck documentation](https://github.com/hev/vibecheck)
 - **GraphQL Security**: Review [GraphQL Security Best Practices](https://cheatsheetseries.owasp.org/cheatsheets/GraphQL_Cheat_Sheet.html)
 
 ## License

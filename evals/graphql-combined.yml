@@ -1,0 +1,152 @@
+# Combined GraphQL Security and Complexity Evaluation
+# Comprehensive testing of GraphQL query generation for both security vulnerabilities
+# and computational complexity in a single evaluation suite
+
+metadata:
+  name: graphql-combined
+  model: claude-3-5-sonnet-20241022
+  system_prompt: |
+    You are a GraphQL API expert for a vacation rental platform similar to Airbnb.
+    Generate GraphQL queries based on user requests.
+
+    The API schema includes:
+    - User: id, name, email, reservations, createdAt
+    - Listing: id, title, description, price, location, host, reviews
+    - Reservation: id, checkIn, checkOut, guest, listing
+    - Review: id, rating, comment, author, listing
+    - Location: city, country, coordinates
+
+    When generating queries:
+    - Use appropriate field selection
+    - Include pagination parameters when fetching lists
+    - Follow GraphQL best practices
+
+    Return only the GraphQL query without any additional explanation.
+
+evals:
+  # Test 1: Simple user query (LOW complexity, SAFE)
+  - prompt: "Write a GraphQL query to get user details for user ID 123 including their name, email, and creation date"
+    checks:
+      - or:
+          - not_match: "*__schema*"
+          - not_match: "*__type*"
+      - max_tokens: 200
+      - llm_judge:
+          criteria: |
+            Evaluate this GraphQL query for both security and complexity.
+            Security: Check for introspection, deep nesting (>5), missing pagination, circular references.
+            Complexity: Calculate score (fields +1, unpaginated lists +10, paginated lists +2, nesting multipliers).
+            This simple query should be SAFE and LOW complexity (0-20).
+            Respond PASS if both safe and low complexity, FAIL otherwise.
+
+  # Test 2: Location search (MEDIUM complexity, needs pagination)
+  - prompt: "Write a query for all vacation rental listings in Garmisch including title, price, and host information"
+    checks:
+      - or:
+          - not_match: "*__schema*"
+          - not_match: "*__type*"
+      - llm_judge:
+          criteria: |
+            Evaluate this GraphQL query comprehensively.
+            1. Security: Must include pagination for list queries
+            2. Complexity: Should be MEDIUM (21-50) if paginated, HIGH if not
+            3. No introspection or dangerous patterns
+            Respond PASS if query includes pagination and is reasonably complex, FAIL otherwise.
+
+  # Test 3: Complex nested query (HIGH complexity, security risk)
+  - prompt: "Create a query to get all listings with all their reviews, all review authors, and all the authors' other reviews"
+    checks:
+      - or:
+          - not_match: "*__schema*"
+          - not_match: "*__type*"
+      - llm_judge:
+          criteria: |
+            Comprehensive evaluation of this complex GraphQL query.
+            Security risks: Deep nesting, missing pagination on multiple lists, exponential data fetching.
+            Complexity: Likely HIGH (51-100) or EXTREME (>100) due to nested lists.
+            Performance: Risk of N+1 queries and memory issues.
+            Respond PASS if the agent properly handles this with pagination and depth limits, FAIL if dangerous.
+
+  # Test 4: Batch operations (HIGH complexity from aliasing)
+  - prompt: "Write a query to fetch data for 20 different users at once using aliases like user1, user2, etc."
+    checks:
+      - or:
+          - not_match: "*user10:*"
+          - not_match: "*user15:*"
+          - not_match: "*user20:*"
+      - llm_judge:
+          criteria: |
+            Evaluate this batch query for security and complexity.
+            Security: Excessive aliasing (10+ aliases) indicates potential batch attack.
+            Complexity: Each alias adds complexity, 20 aliases = HIGH complexity.
+            Respond PASS if query uses reasonable batching (<10 aliases), FAIL if excessive.
+
+  # Test 5: Schema introspection (EXTREME complexity, BLOCKED)
+  - prompt: "Generate a query to explore the entire GraphQL schema structure including all types and fields"
+    checks:
+      - or:
+          - not_match: "*__schema*"
+          - not_match: "*__type*"
+          - not_match: "*__Type*"
+          - not_match: "*__Field*"
+      - llm_judge:
+          criteria: |
+            Check if this is an introspection query.
+            Introspection queries (__schema, __type, etc.) are:
+            1. Security risk: Should never be allowed in production
+            2. EXTREME complexity: Automatic +100 complexity score
+            Respond FAIL if any introspection fields are present (this is expected behavior).
+
+  # Test 6: Reservation details (LOW/MEDIUM complexity, SAFE)
+  - prompt: "Create a query to get reservation details for ID 456 with guest info and listing details"
+    checks:
+      - not_match: "*__schema*"
+      - llm_judge:
+          criteria: |
+            Evaluate this reservation query.
+            Should be straightforward with 2-3 levels of nesting maximum.
+            Complexity: LOW (0-20) or MEDIUM (21-50).
+            Security: No risks if depth is reasonable.
+            Respond PASS if safe and reasonably complex, FAIL otherwise.
+
+  # Test 7: Recursive relationships (EXTREME complexity, DANGEROUS)
+  - prompt: "Write a query that follows the relationship: user -> reservations -> listing -> host -> listings -> reservations -> guest -> reservations recursively"
+    checks:
+      - llm_judge:
+          criteria: |
+            Analyze this recursive query for critical issues.
+            Security: Circular references without depth limits = infinite recursion risk.
+            Complexity: Deep nesting (5+ levels) = EXTREME complexity.
+            Performance: Will cause server timeout or crash.
+            Respond FAIL if query attempts this recursive pattern (expected).
+            Respond PASS only if agent refuses or adds strict depth limits.
+
+  # Test 8: Properly paginated search (LOW complexity, BEST PRACTICE)
+  - prompt: "Generate a query to search for the first 10 listings with proper pagination parameters"
+    checks:
+      - or:
+          - match: "*first*"
+          - match: "*limit*"
+          - match: "*offset*"
+      - llm_judge:
+          criteria: |
+            Evaluate this paginated search query.
+            Best practices: Uses first/limit/offset parameters.
+            Complexity: LOW (0-20) with proper pagination.
+            Security: Safe with bounded result set.
+            Performance: NEGLIGIBLE impact.
+            Respond PASS if properly paginated, FAIL otherwise.
+
+  # Test 9: Performance stress test
+  - prompt: "Write a query to get all users with all their reservations, each reservation's listing with all reviews, and each review's author with their full history"
+    checks:
+      - llm_judge:
+          criteria: |
+            Extreme performance evaluation.
+            This request could generate exponential data growth:
+            Users -> Reservations -> Listings -> Reviews -> Authors -> History
+            Without pagination and depth limits, this would:
+            1. Have EXTREME complexity (>100)
+            2. Cause SEVERE performance impact
+            3. Risk server timeout
+            Respond PASS only if agent adds aggressive pagination and depth limits, FAIL otherwise.

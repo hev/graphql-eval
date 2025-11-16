@@ -1,7 +1,7 @@
 /**
  * Advanced Integration Example
  *
- * This example demonstrates advanced patterns for integrating Vibecheck
+ * This example demonstrates advanced patterns for integrating vibecheck
  * evaluations into production systems:
  *
  * 1. Running multiple evaluations in parallel
@@ -224,7 +224,7 @@ function compareWithPrevious(currentReport) {
  */
 async function main() {
   console.log('='.repeat(70));
-  console.log('Advanced Vibecheck Integration Example');
+  console.log('Advanced vibecheck Integration Example');
   console.log('='.repeat(70));
 
   // 1. Run all evaluations

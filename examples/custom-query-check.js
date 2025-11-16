@@ -1,7 +1,7 @@
 /**
  * Example: Custom GraphQL Query Security Check
  *
- * This example shows how to use Vibecheck programmatically to check
+ * This example shows how to use vibecheck programmatically to check
  * a GraphQL query for security issues without running the full test suite.
  *
  * Use case: Integrate this into your GraphQL gateway or middleware to
@@ -35,7 +35,7 @@ async function checkQuerySecurity(query) {
 
   // In a real implementation, you'd:
   // 1. Create a custom eval on-the-fly with just this query
-  // 2. Run it through Vibecheck
+  // 2. Run it through vibecheck
   // 3. Parse the results
 
   // For demonstration, we'll check if the query matches any patterns

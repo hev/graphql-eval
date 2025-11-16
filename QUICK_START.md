@@ -5,7 +5,7 @@ Get the GraphQL Security Evaluation Suite running in under 2 minutes.
 ## Prerequisites
 
 - Node.js 18+ installed
-- Vibecheck API key
+- vibecheck API key
 
 ## Setup Steps
 
@@ -98,7 +98,7 @@ This is normal! Each test makes LLM API calls. Expect 1-3 seconds per test case.
 ## Key Files
 
 - `package.json` - Dependencies and scripts
-- `evals/*.yml` - Evaluation definitions (Vibecheck DSL)
+- `evals/*.yml` - Evaluation definitions (vibe check DSL)
 - `test/*.test.js` - Jest test suites
 - `test-data/*.graphql` - Example queries
 
